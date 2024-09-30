@@ -4,9 +4,15 @@ from rembg import remove
 from PIL import Image
 import io
 import os
+import logging
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST"], allow_headers=["Content-Type"])  # Enable CORS with methods and headers
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+# Enable CORS with methods and headers
+CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST"], allow_headers=["Content-Type"])
 
 @app.route('/')
 def home():
@@ -37,8 +43,9 @@ def upload_image():
 
     except Exception as e:
         # Log the error and return a generic error message
-        print(f"Error processing the image: {str(e)}")
+        logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
 if __name__ == '__main__':
-    pass  # Remove the app.run() for production, since Gunicorn manages this.
+    # This line is not needed in production as Gunicorn will handle it.
+    pass
