@@ -16,5 +16,5 @@ COPY . .
 # Expose the port your app runs on (optional, as Railway automatically manages ports)
 EXPOSE 5000
 
-# Command to run your application with reduced workers
+# Run the app with Gunicorn, limit workers to 1 to avoid memory issues
 CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:${PORT:-5000} server:app"]
