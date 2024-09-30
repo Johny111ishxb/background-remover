@@ -22,6 +22,10 @@ def upload_image():
 
     return send_file(img_io, mimetype='image/png')
 
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
     
