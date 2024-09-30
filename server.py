@@ -41,4 +41,4 @@ def upload_image():
         return f"Error processing the image: {str(e)}", 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)  # Run with debug mode enabled
+    pass  # Remove the app.run() for production, since Gunicorn manages this.
