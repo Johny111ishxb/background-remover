@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8080
 
 # Command to run the app using Gunicorn with Gevent workers
-CMD ["gunicorn", "-w", "1", "-k", "gevent", "-b", "0.0.0.0:8080", "--timeout", "120", "server:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:$PORT", "server:app"]
