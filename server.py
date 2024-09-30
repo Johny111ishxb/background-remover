@@ -1,12 +1,12 @@
-from flask import Flask, request, send_file, render_template  # Import render_template
+from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
-import os  # Import os module
+import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes
 
 @app.route('/')
 def home():
@@ -28,4 +28,4 @@ def upload_image():
     return send_file(img_io, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)  # Update for deployment
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)
