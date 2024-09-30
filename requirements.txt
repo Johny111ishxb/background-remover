@@ -1,6 +1,6 @@
 Flask==2.2.5
 Flask-CORS==3.0.10
-rembg==2.0.32
+rembg==2.0.59  # Latest compatible version
 Pillow==9.2.0
 numpy==1.23.5
 numba==0.56.4
