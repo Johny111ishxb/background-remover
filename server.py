@@ -46,6 +46,4 @@ def upload_image():
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
-if __name__ == '__main__':
-    # This line is not needed in production as Gunicorn will handle it.
-    pass
+
