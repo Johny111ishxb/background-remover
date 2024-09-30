@@ -3,7 +3,6 @@ from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
-import os  # Import os module
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -18,14 +17,18 @@ def upload_image():
         return 'No file uploaded', 400
 
     image_file = request.files['image_file']
-    input_image = Image.open(image_file.stream)
-    output_image = remove(input_image)
+    
+    try:
+        input_image = Image.open(image_file.stream)
+        output_image = remove(input_image)
 
-    img_io = io.BytesIO()
-    output_image.save(img_io, 'PNG')
-    img_io.seek(0)
+        img_io = io.BytesIO()
+        output_image.save(img_io, 'PNG')
+        img_io.seek(0)
 
-    return send_file(img_io, mimetype='image/png')
+        return send_file(img_io, mimetype='image/png')
+    except Exception as e:
+        return f'Error processing the image: {str(e)}', 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)  # Update for deployment
+    app.run(host='0.0.0.0', port=5000, debug=True)  # Listen on all addresses
