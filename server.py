@@ -6,7 +6,7 @@ import io
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST"], allow_headers=["Content-Type"])  # Enable CORS with methods and headers
 
 @app.route('/')
 def home():
@@ -14,18 +14,31 @@ def home():
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
-    if 'image_file' not in request.files:
-        return 'No file uploaded', 400
+    try:
+        if 'image_file' not in request.files:
+            return 'No file uploaded', 400
 
-    image_file = request.files['image_file']
-    input_image = Image.open(image_file.stream)
-    output_image = remove(input_image)
+        image_file = request.files['image_file']
+        input_image = Image.open(image_file.stream)
 
-    img_io = io.BytesIO()
-    output_image.save(img_io, 'PNG')
-    img_io.seek(0)
+        # Ensure the image is opened correctly
+        if input_image is None:
+            return 'Error in opening the image', 400
 
-    return send_file(img_io, mimetype='image/png')
+        # Process the image
+        output_image = remove(input_image)
+
+        # Save the output image to a byte stream
+        img_io = io.BytesIO()
+        output_image.save(img_io, 'PNG')
+        img_io.seek(0)
+
+        return send_file(img_io, mimetype='image/png')
+
+    except Exception as e:
+        # Log the error and return a generic error message
+        print(f"Error processing the image: {str(e)}")
+        return f"Error processing the image: {str(e)}", 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))  # Update for Rainway
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)  # Run with debug mode enabled
