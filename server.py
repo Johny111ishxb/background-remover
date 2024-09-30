@@ -1,16 +1,11 @@
-from flask import Flask, request, send_file, render_template
-from flask_cors import CORS
+from flask import Flask, request, send_file
+from flask_cors import CORS  # Import CORS
 from rembg import remove
 from PIL import Image
 import io
-import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
-
-@app.route('/')
-def home():
-    return render_template('index.html')  # Serve the HTML file
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -28,6 +23,7 @@ def upload_image():
     return send_file(img_io, mimetype='image/png')
 
 if __name__ == '__main__':
-    # Use Railway's assigned PORT or default to 8000
-    port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
+
+
+
