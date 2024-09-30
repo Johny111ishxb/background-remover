@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Background Remover</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #upload-button {
+            display: block;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #upload-button:hover {
+            background-color: rgb(0, 255, 234);
+        }
+
+        #uploaded-image {
+            display: none;
+            width: 100%;
+            margin-top: 20px;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        #download-button {
+            display: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #download-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upload the image to remove the background</h1>
+        <input type="file" id="image-input" style="display:none;" accept="image/*" />
+        <button id="upload-button">Upload Image</button>
+        <img id="uploaded-image" src="" alt="Processed Image" />
+        <button id="download-button">Download Image</button>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('image-input');
+        const uploadButton = document.getElementById('upload-button');
+        const uploadedImage = document.getElementById('uploaded-image');
+        const downloadButton = document.getElementById('download-button');
+
+        uploadButton.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('image_file', file);
+
+                // Send to local Flask server instead of the API
+                const response = await fetch('http://127.0.0.1:5000/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const objectURL = URL.createObjectURL(blob);
+
+                    uploadedImage.src = objectURL;
+                    uploadedImage.style.display = 'block';
+                    uploadButton.style.display = 'none';  // Hide the upload button
+                    downloadButton.style.display = 'inline-block'; // Show download button
+                } else {
+                    alert('Error: ' + response.statusText);
+                }
+            }
+        });
+
+        downloadButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = uploadedImage.src;
+            link.download = 'background-removed.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+
+</body>
+</html>
