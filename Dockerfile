@@ -1,21 +1,20 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.10
+# Use the official Python image from Docker Hub
+FROM python:3.10-slim
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file
+# Copy the requirements.txt first to leverage Docker cache
 COPY requirements.txt .
 
-# Install dependencies
+# Install required dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port your app runs on (optional, as Railway automatically manages ports)
-EXPOSE 5000
+# Expose the port that Gunicorn will use
+EXPOSE 8080
 
-# Run the app with Gunicorn, limit workers to 1 to avoid memory issues
-CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:8080 --timeout 120 server:app
-"]
+# Command to run the app using Gunicorn with Gevent workers
+CMD ["gunicorn", "-w", "1", "-k", "gevent", "-b", "0.0.0.0:8080", "--timeout", "120", "server:app"]
