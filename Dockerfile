@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 5000
 
 # Run the app with Gunicorn, limit workers to 1 to avoid memory issues
-CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:${PORT:-5000} server:app"]
+CMD ["sh", "-c", "gunicorn -w 1 -b 0.0.0.0:8080 --timeout 120 server:app
+"]
