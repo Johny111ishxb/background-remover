@@ -15,6 +15,3 @@ COPY . .
 
 # Expose the port your app runs on (optional, as Railway automatically manages ports)
 EXPOSE 5000
-
-# Command to run your application with proper environment variable substitution
-CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:$PORT server:app"]
