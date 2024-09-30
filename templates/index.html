@@ -100,7 +100,7 @@
                 const formData = new FormData();
                 formData.append('image_file', file);
 
-                // Change to your deployed app URL
+                // Updated to use your deployed app URL
                 const response = await fetch('https://background-remover-production.up.railway.app/upload', {
                     method: 'POST',
                     body: formData
