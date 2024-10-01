@@ -101,7 +101,7 @@
                 formData.append('image_file', file);
 
                 // Send to local Flask server instead of the API
-                const response = await fetch('https://background-remover-production.up.railway.app//upload', {
+                const response = await fetch('https://background-remover-production.up.railway.app/upload', {
                     method: 'POST',
                     body: formData
                 });
