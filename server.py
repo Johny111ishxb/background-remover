@@ -47,4 +47,7 @@ def upload_image():
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
+
+
 # No need for if __name__ == '__main__': in production
