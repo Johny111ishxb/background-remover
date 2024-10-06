@@ -20,7 +20,6 @@ def home():
 @app.route('/upload', methods=['POST'])
 def upload_image():
     try:
-        # Ensure file is in request
         if 'image_file' not in request.files:
             return 'No file uploaded', 400
 
@@ -43,11 +42,7 @@ def upload_image():
         return send_file(img_io, mimetype='image/png')
 
     except Exception as e:
-        # Log and return a generic error message
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
-
-
-# No need for if __name__ == '__main__': in production
