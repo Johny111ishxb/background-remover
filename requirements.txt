@@ -1,7 +1,7 @@
 Flask==2.2.5
 Flask-CORS==3.0.10
-rembg==2.0.59  # Latest compatible version
+rembg==2.0.59
 Pillow==9.2.0
-numpy==1.23.5
-numba==0.56.4
+numpy==1.21.6  # More stable version for compatibility
+numba==0.55.2  # Compatible with numpy==1.21.6
 gunicorn
