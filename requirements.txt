@@ -1,5 +1,4 @@
 Flask==2.3.3
-Flask-CORS==3.0.10  # Added Flask-CORS for CORS support
 rembg==2.0.30
 Pillow==10.0.0
 numpy==1.24.3
