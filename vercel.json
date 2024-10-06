@@ -14,11 +14,4 @@
   ]
 }
 {
-  "builds": [
-    { "src": "server.py", "use": "@vercel/python" }
-  ]
-}
-{
-  "pythonVersion": "3.10"
-}
 
