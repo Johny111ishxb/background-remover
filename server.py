@@ -31,6 +31,9 @@ def upload_image():
             logging.error(f"Error opening image: {str(img_error)}")
             return 'Error in opening the image', 400
 
+        # Convert image to RGBA to handle transparency (important for rembg)
+        input_image = input_image.convert("RGBA")
+
         # Process the image using rembg
         output_image = remove(input_image)
 
@@ -45,4 +48,8 @@ def upload_image():
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
+# Set a 16MB upload limit
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
+
+if __name__ == '__main__':
+    app.run(debug=True)
