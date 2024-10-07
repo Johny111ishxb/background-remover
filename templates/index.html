@@ -196,10 +196,27 @@
       background-color: #222;
       color: #fff;
     }
-    body.dark-mode .sign-up-btn:hover{
+    body.dark-mode .sign-up-btn:hover::before {
+  left: 0;
+}
+body.dark-mode .sign-up-btn:hover{
    
-      border-color: violet;
-    }
+      border: none;
+   background: violet;
+ }
+    body.dark-mode .sign-up-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, violet, rgb(241, 66, 241));
+  transition: left 0.4s ease;
+  border: none;
+  z-index: -1;
+}
+    
     body.dark-mode .loader{
         --c: no-repeat linear-gradient(violet 0 0);
    
