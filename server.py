@@ -25,9 +25,14 @@ def upload_image():
             return 'No file uploaded', 400
 
         image_file = request.files['image_file']
+        logging.info(f"Uploaded image size: {image_file.content_length} bytes")
 
+        # Load the image
         try:
             input_image = Image.open(image_file.stream)
+            # Resize the image to limit memory usage
+            max_size = (1024, 1024)  # Maximum size for the image
+            input_image.thumbnail(max_size, Image.ANTIALIAS)
         except Exception as img_error:
             logging.error(f"Error opening image: {str(img_error)}")
             return 'Error in opening the image', 400
