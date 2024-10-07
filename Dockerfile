@@ -4,16 +4,14 @@ FROM python:3.10
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
+# Copy the requirements file and install dependencies in one step
 COPY requirements.txt .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port your app runs on (optional, as Railway automatically manages ports)
+# Expose the port your app runs on
 EXPOSE 5000
 
 # Command to run your application with reduced workers
