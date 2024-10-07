@@ -1,8 +1,10 @@
+
 from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
+import os
 import logging
 
 app = Flask(__name__)
@@ -20,22 +22,20 @@ def home():
 @app.route('/upload', methods=['POST'])
 def upload_image():
     try:
-        # Ensure file is in request
         if 'image_file' not in request.files:
             return 'No file uploaded', 400
 
         image_file = request.files['image_file']
+        input_image = Image.open(image_file.stream)
 
-        try:
-            input_image = Image.open(image_file.stream)
-        except Exception as img_error:
-            logging.error(f"Error opening image: {str(img_error)}")
+        # Ensure the image is opened correctly
+        if input_image is None:
             return 'Error in opening the image', 400
 
-        # Process the image using rembg
+        # Process the image
         output_image = remove(input_image)
 
-        # Save the processed image to a byte stream
+        # Save the output image to a byte stream
         img_io = io.BytesIO()
         output_image.save(img_io, 'PNG')
         img_io.seek(0)
@@ -43,11 +43,10 @@ def upload_image():
         return send_file(img_io, mimetype='image/png')
 
     except Exception as e:
-        # Log and return a generic error message
+        # Log the error and return a generic error message
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
-
-
-# No need for if __name__ == '__main__': in production
+if __name__ == '__main__':
+    # This line is not needed in production as Gunicorn will handle it.
+    pass
