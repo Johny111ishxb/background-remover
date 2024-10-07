@@ -1,10 +1,10 @@
-
 from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
 import logging
+import os
 
 app = Flask(__name__)
 
@@ -13,6 +13,9 @@ logging.basicConfig(level=logging.INFO)
 
 # Enable CORS with methods and headers
 CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST"], allow_headers=["Content-Type"])
+
+# Limit upload size to 16MB
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 
 @app.route('/')
 def home():
@@ -28,10 +31,15 @@ def upload_image():
         image_file = request.files['image_file']
 
         try:
+            # Open the image file
             input_image = Image.open(image_file.stream)
         except Exception as img_error:
             logging.error(f"Error opening image: {str(img_error)}")
             return 'Error in opening the image', 400
+
+        # Check image size
+        if input_image.size[0] > 2000 or input_image.size[1] > 2000:  # Limit dimensions to 2000x2000 pixels
+            return 'Image dimensions too large. Max 2000x2000 pixels.', 400
 
         # Process the image using rembg
         output_image = remove(input_image)
@@ -48,7 +56,5 @@ def upload_image():
         logging.error(f"Error processing the image: {str(e)}")
         return f"Error processing the image: {str(e)}", 500
 
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
-
-
-# No need for if __name__ == '__main__': in production
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
