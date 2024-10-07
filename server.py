@@ -19,19 +19,21 @@ def home():
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
+    # Check if the file is in the request
+    if 'image_file' not in request.files:
+        logging.error("No file uploaded")
+        return 'No file uploaded', 400
+
+    image_file = request.files['image_file']
+
     try:
-        # Ensure file is in request
-        if 'image_file' not in request.files:
-            return 'No file uploaded', 400
+        # Attempt to open the uploaded image
+        input_image = Image.open(image_file.stream)
+    except Exception as img_error:
+        logging.error(f"Error opening image: {str(img_error)}")
+        return 'Error in opening the image', 400
 
-        image_file = request.files['image_file']
-
-        try:
-            input_image = Image.open(image_file.stream)
-        except Exception as img_error:
-            logging.error(f"Error opening image: {str(img_error)}")
-            return 'Error in opening the image', 400
-
+    try:
         # Process the image using rembg
         output_image = remove(input_image)
 
@@ -40,11 +42,13 @@ def upload_image():
         output_image.save(img_io, 'PNG')
         img_io.seek(0)
 
+        # Return the processed image as a response
         return send_file(img_io, mimetype='image/png')
 
     except Exception as e:
-        # Log and return a generic error message
         logging.error(f"Error processing the image: {str(e)}")
-        return f"Error processing the image: {str(e)}", 500
+        return 'Error processing the image', 500
 
-# No need for if __name__ == '__main__': in production
+# This is the entry point when running the app
+if __name__ == '__main__':
+    app.run(debug=True)  # Set debug=True for development; set to False in production
